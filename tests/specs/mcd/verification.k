@@ -113,6 +113,9 @@ module VERIFICATION-SYNTAX
     rule nthbyteof(V, I, N) => nthbyteof(V /Int 256, I, N -Int 1) when N  >Int (I +Int 1) [concrete]
     rule nthbyteof(V, I, N) =>           V modInt 256             when N ==Int (I +Int 1) [concrete]
 
+    syntax Int ::= #symEcrec ( Int , Int , Int , Int ) [function]
+ // -------------------------------------------------------------
+
 endmodule
 
 module VERIFICATION
@@ -424,5 +427,15 @@ module VERIFICATION
     */
     rule sgn(X) ==K -1 => maxSInt256 <Int X requires #rangeUInt(256, X)
     rule chop(X *Int Y) /sWord chop(Y) => pow256 -Int X requires #rangeUInt(256, X) andBool #rangeSInt(256, Y) andBool notBool #rangeSInt(256, X *Int Y)
+
+    // ### dai-permit-pass-rough
+
+    rule (B ==K false) ==K false => B
+
+    // HACK
+    rule #sizeByteArray(#ecrec(_ACCT)) => 32 // requires ACCT =/=K .Account
+
+    rule #range(BUF:Memory [ N <- _           ], KEY, WIDTH) => #range(BUF, KEY, WIDTH) requires KEY +Int WIDTH <=Int N
+    rule #range(BUF:Memory [ N := _:ByteArray ], KEY, WIDTH) => #range(BUF, KEY, WIDTH) requires KEY +Int WIDTH <=Int N
 
 endmodule

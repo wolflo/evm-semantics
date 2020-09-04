@@ -28,3 +28,4 @@ EVM-TYPES.signextend.positive
 SERIALIZATION.keccak
 SERIALIZATION.#newAddr
 SERIALIZATION.#newAddrCreate2
+SERIALIZATION.sender

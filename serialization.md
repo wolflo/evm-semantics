@@ -51,7 +51,7 @@ Address/Hash Helpers
 
     rule #sender(_, _, _, _, _, _, _, _, _, _) => .Account [owise]
 
-    rule #sender(HT, TW, TR, TS) => #sender(ECDSARecover(HT, TW, TR, TS))
+    rule [sender]: #sender(HT, TW, TR, TS) => #sender(ECDSARecover(HT, TW, TR, TS))
 
     rule #sender("")  => .Account
     rule #sender(STR) => #addr(#parseHexWord(Keccak256(STR))) requires STR =/=String ""
