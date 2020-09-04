@@ -116,6 +116,18 @@ module VERIFICATION-SYNTAX
     syntax Int ::= #symEcrec ( Int , Int , Int , Int ) [function]
  // -------------------------------------------------------------
 
+    syntax Int ::= num0 ( Int )                    [function, smtlib(smt_num0)]
+                 | num1 ( Int )                    [function, smtlib(smt_num1)]
+                 | #rpow ( Int , Int , Int , Int ) [function, smtlib(smt_rpow)] // smt-prelude
+ // ---------------------------------------------------------------------------
+    rule num0(N) => 0 requires N ==Int 1
+    rule num1(N) => 0 requires N ==Int 1
+
+    rule #rpow( Z,   _X, 0, _Base) => Z
+    rule #rpow( Z,   _X, N, _Base) => Z requires N modInt 2 ==Int 0 andBool N /Int 2 ==Int 0
+    rule #rpow(_Z,    0, N, _Base) => 0 requires N =/=Int 0
+    rule #rpow(Base,  X, N,  Base) => X requires N ==Int 1
+
 endmodule
 
 module VERIFICATION
@@ -437,5 +449,21 @@ module VERIFICATION
 
     rule #range(BUF:Memory [ N <- _           ], KEY, WIDTH) => #range(BUF, KEY, WIDTH) requires KEY +Int WIDTH <=Int N
     rule #range(BUF:Memory [ N := _:ByteArray ], KEY, WIDTH) => #range(BUF, KEY, WIDTH) requires KEY +Int WIDTH <=Int N
+
+    // ### pot-rpow-loop-pass-rough
+
+    rule num0(N /Int 2) => num0(N) -Int 1 requires N >=Int 1 andBool N modInt 2 ==Int 0
+    rule num1(N /Int 2) => num1(N) -Int 1 requires N  >Int 1 andBool N modInt 2 ==Int 1
+
+    rule num0(N /Int 2) => num0(N) requires N >=Int 1 andBool N modInt 2 ==Int 1
+    rule num1(N /Int 2) => num1(N) requires N  >Int 1 andBool N modInt 2 ==Int 0
+
+    rule num0(N) >=Int 0 => num0(N) >=Int 1 requires N >=Int 1 andBool N modInt 2 ==Int 0
+    rule num1(N) >=Int 0 => num1(N) >=Int 1 requires N  >Int 1 andBool N modInt 2 ==Int 1
+
+    rule #rpow( ((Z *Int X) +Int Half) /Int Base , X                                , N /Int 2 , Base ) => #rpow( Z    , X , N , Base ) requires Half ==Int Base /Int 2 andBool N ==Int 1
+    rule #rpow( ((Z *Int X) +Int Half) /Int Base , ((X *Int X) +Int Half) /Int Base , N /Int 2 , Base ) => #rpow( Z    , X , N , Base ) requires N modInt 2 ==Int 1 andBool N >=Int 2 andBool Half ==Int Base /Int 2
+    rule #rpow( Z                                , ((X *Int X) +Int Half) /Int Base , N /Int 2 , Base ) => #rpow( Z    , X , N , Base ) requires N modInt 2 ==Int 0 andBool N >=Int 2 andBool Half ==Int Base /Int 2
+    rule #rpow( X                                , ((X *Int X) +Int Half) /Int Base , N /Int 2 , Base ) => #rpow( Base , X , N , Base ) requires N modInt 2 ==Int 1 andBool N /Int 2 =/=Int 0 andBool Half ==Int Base /Int 2
 
 endmodule
