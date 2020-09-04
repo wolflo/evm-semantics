@@ -466,4 +466,14 @@ module VERIFICATION
     rule #rpow( Z                                , ((X *Int X) +Int Half) /Int Base , N /Int 2 , Base ) => #rpow( Z    , X , N , Base ) requires N modInt 2 ==Int 0 andBool N >=Int 2 andBool Half ==Int Base /Int 2
     rule #rpow( X                                , ((X *Int X) +Int Half) /Int Base , N /Int 2 , Base ) => #rpow( Base , X , N , Base ) requires N modInt 2 ==Int 1 andBool N /Int 2 =/=Int 0 andBool Half ==Int Base /Int 2
 
+    // ### open-cdp
+
+    rule #computeValidJumpDests(#buf(32, BUF) => .ByteArray, I => I +Int 32, _RESULT) requires 0 <=Int  BUF andBool  BUF <Int pow256
+
+    rule I in (SetItem(I') REST) => I in REST requires I =/=Int I'
+
+    rule #newAddr(_, _) ==K 0            => false
+    rule hash2(_, V1)   ==K hash2(_, V2) => false requires V1 =/=Int V2
+    rule 1              ==K hash2(_, _)  => false
+
 endmodule
