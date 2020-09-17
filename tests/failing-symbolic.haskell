@@ -77,6 +77,7 @@ tests/specs/mcd/flopper-cage-pass-spec.k
 tests/specs/mcd/flopper-file-pass-rough-spec.k
 tests/specs/mcd/flopper-tick-pass-rough-spec.k
 tests/specs/mcd/pot-rpow-loop-pass-rough-spec.k
+tests/specs/mcd/spotter-exhaustiveness-spec.k
 tests/specs/mcd/vat-addui-fail-rough-spec.k
 tests/specs/mcd/vat-deny-diff-fail-rough-spec.k
 tests/specs/mcd/vat-fork-same-pass-rough-spec.k
