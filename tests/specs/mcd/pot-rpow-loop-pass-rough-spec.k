@@ -14,7 +14,7 @@ module POT-RPOW-LOOP-PASS-ROUGH-SPEC
           <output> VOutput => VOutput </output>
           <statusCode> _ => ?_ </statusCode>
           <endPC> _ => ?_ </endPC>
-          <callStack> VCallStack </callStack>
+          <callStack> _VCallStack </callStack>
           <interimStates> _ </interimStates>
           <touchedAccounts> _ => ?_ </touchedAccounts>
           <callState>
@@ -34,9 +34,9 @@ module POT-RPOW-LOOP-PASS-ROUGH-SPEC
             <callDepth> VCallDepth </callDepth>
           </callState>
           <substate>
-            <selfDestruct> VSelfDestruct </selfDestruct>
+            <selfDestruct> _VSelfDestruct </selfDestruct>
             <log> _ => ?_ </log>
-            <refund> Vrefund => ?_ </refund>
+            <refund> _Vrefund => ?_ </refund>
           </substate>
           <gasPrice> _ </gasPrice>
           <origin> ORIGIN_ID </origin>
@@ -50,7 +50,7 @@ module POT-RPOW-LOOP-PASS-ROUGH-SPEC
             <receiptsRoot> _ </receiptsRoot>
             <logsBloom> _ </logsBloom>
             <difficulty> _ </difficulty>
-            <number> BLOCK_NUMBER </number>
+            <number> _BLOCK_NUMBER </number>
             <gasLimit> _ </gasLimit>
             <gasUsed> _ </gasUsed>
             <timestamp> TIME </timestamp>
@@ -79,7 +79,7 @@ module POT-RPOW-LOOP-PASS-ROUGH-SPEC
               <code> Pot_bin_runtime </code>
               <storage> ACCT_ID_STORAGE => ACCT_ID_STORAGE  </storage>
               <origStorage> ACCT_ID_ORIG_STORAGE </origStorage>
-              <nonce> Nonce_Pot => ?_ </nonce>
+              <nonce> _Nonce_Pot => ?_ </nonce>
             </account>
             <account>
               <acctID> 1 </acctID>
@@ -160,41 +160,41 @@ module POT-RPOW-LOOP-PASS-ROUGH-SPEC
           <messages> _ </messages>
         </network>
       </ethereum>
-    requires #rangeAddress(ACCT_ID)
-     andBool ACCT_ID =/=Int 0
-     andBool #notPrecompileAddress(ACCT_ID)
-     andBool #rangeAddress(CALLER_ID)
-     andBool #rangeAddress(ORIGIN_ID)
-     andBool #rangeUInt(256, TIME)
-     andBool #rangeUInt(256, ACCT_ID_balance)
-     andBool #rangeUInt(256, ECREC_BAL)
-     andBool #rangeUInt(256, SHA256_BAL)
-     andBool #rangeUInt(256, RIP160_BAL)
-     andBool #rangeUInt(256, ID_BAL)
-     andBool #rangeUInt(256, MODEXP_BAL)
-     andBool #rangeUInt(256, ECADD_BAL)
-     andBool #rangeUInt(256, ECMUL_BAL)
-     andBool #rangeUInt(256, ECPAIRING_BAL)
-     andBool #rangeUInt(256, BLAKE2_BAL)
-     andBool VCallDepth <=Int 1024
-     andBool #rangeUInt(256, VCallValue)
-     andBool #rangeUInt(256, VChainId)
+      requires #rangeAddress(ACCT_ID)
+       andBool ACCT_ID =/=Int 0
+       andBool #notPrecompileAddress(ACCT_ID)
+       andBool #rangeAddress(CALLER_ID)
+       andBool #rangeAddress(ORIGIN_ID)
+       andBool #rangeUInt(256, TIME)
+       andBool #rangeUInt(256, ACCT_ID_balance)
+       andBool #rangeUInt(256, ECREC_BAL)
+       andBool #rangeUInt(256, SHA256_BAL)
+       andBool #rangeUInt(256, RIP160_BAL)
+       andBool #rangeUInt(256, ID_BAL)
+       andBool #rangeUInt(256, MODEXP_BAL)
+       andBool #rangeUInt(256, ECADD_BAL)
+       andBool #rangeUInt(256, ECMUL_BAL)
+       andBool #rangeUInt(256, ECPAIRING_BAL)
+       andBool #rangeUInt(256, BLAKE2_BAL)
+       andBool VCallDepth <=Int 1024
+       andBool #rangeUInt(256, VCallValue)
+       andBool #rangeUInt(256, VChainId)
 
-     andBool (#rangeUInt(256, Half)
-     andBool (#rangeUInt(256, Z)
-     andBool (#rangeUInt(256, Base)
-     andBool (#rangeUInt(256, N)
-     andBool (#rangeUInt(256, X)
-     andBool ((Half ==Int Base /Int 2)
-     andBool ((0 <=Int #rpow(Z, X, N, Base))
-     andBool ((#rpow(Z, X, N, Base) *Int Base <Int pow256)
-     andBool ((N =/=Int 0)
-     andBool ((Base =/=Int 0)
-     andBool ((#sizeWordStack(WS) <=Int 1000)
-     andBool ((num0(N) >=Int 0)
-     andBool ((num1(N) >=Int 0)
-     andBool (#rangeUInt(256, VMemoryUsed)
-     andBool (VGas >=Int 3000000)))))))))))))))
+       andBool (#rangeUInt(256, Half)
+       andBool (#rangeUInt(256, Z)
+       andBool (#rangeUInt(256, Base)
+       andBool (#rangeUInt(256, N)
+       andBool (#rangeUInt(256, X)
+       andBool ((Half ==Int Base /Int 2)
+       andBool ((0 <=Int #rpow(Z, X, N, Base))
+       andBool ((#rpow(Z, X, N, Base) *Int Base <Int pow256)
+       andBool ((N =/=Int 0)
+       andBool ((Base =/=Int 0)
+       andBool ((#sizeWordStack(WS) <=Int 1000)
+       andBool ((num0(N) >=Int 0)
+       andBool ((num1(N) >=Int 0)
+       andBool (#rangeUInt(256, VMemoryUsed)
+       andBool (VGas >=Int 3000000)))))))))))))))
 
 
 
