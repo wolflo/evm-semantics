@@ -128,6 +128,10 @@ module VERIFICATION-SYNTAX
     rule #rpow(_Z,    0, N, _Base) => 0 requires N =/=Int 0
     rule #rpow(Base,  X, N,  Base) => X requires N ==Int 1
 
+    syntax Int ::= #rmul ( Int , Int ) [function, smtlib(smt_rmul)]
+ // ---------------------------------------------------------------
+    rule #rmul(X, Y) => (X *Int Y) /Int #Ray
+
 endmodule
 
 module VERIFICATION
