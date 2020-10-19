@@ -412,11 +412,11 @@ module VERIFICATION
 
     // ### spotter-exhaustiveness
 
-    rule #range(M [ K <- _   ], START, WIDTH) => #range(M, START, WIDTH) requires K                           <Int START orBool START +Int WIDTH <=Int K
-    rule #range(M [ K := BUF ], START, WIDTH) => #range(M, START, WIDTH) requires K +Int #sizeByteArray(BUF) <=Int START orBool START +Int WIDTH <=Int K
-    rule #sizeByteArray(#padToWidth(32, #asByteStack(#getValue(#bytes32(X))))) => 32
-    rule #asWord(#padToWidth(32, #asByteStack(#getValue(#bytes32(X))))) => X
-    rule (maxUInt160 &Int X) modInt pow160 => maxUInt160 &Int X requires 0 <=Int X
+    rule #range(M [ K <- _   ], START, WIDTH) => #range(M, START, WIDTH) requires K                           <Int START orBool START +Int WIDTH <=Int K [simplification]
+    rule #range(M [ K := BUF ], START, WIDTH) => #range(M, START, WIDTH) requires K +Int #sizeByteArray(BUF) <=Int START orBool START +Int WIDTH <=Int K [simplification]
+    rule #sizeByteArray(#padToWidth(32, #asByteStack(#getValue(#bytes32(X))))) => 32                                                                     [simplification]
+    rule #asWord(#padToWidth(32, #asByteStack(#getValue(#bytes32(X))))) => X                                                                             [simplification]
+    rule (maxUInt160 &Int X) modInt pow160 => maxUInt160 &Int X requires 0 <=Int X                                                                       [simplification]
 
     // ### vat-mului-fail-rough
 
@@ -452,43 +452,43 @@ module VERIFICATION
         pow256 -Int ((X *Int Y) /Int Y)
         pow256 -Int X
     */
-    rule sgn(X) ==K -1 => maxSInt256 <Int X requires #rangeUInt(256, X)
-    rule chop(X *Int Y) /sWord chop(Y) => pow256 -Int X requires #rangeUInt(256, X) andBool #rangeSInt(256, Y) andBool notBool #rangeSInt(256, X *Int Y)
+    rule sgn(X) ==K -1 => maxSInt256 <Int X requires #rangeUInt(256, X)                                                                                  [simplification]
+    rule chop(X *Int Y) /sWord chop(Y) => pow256 -Int X requires #rangeUInt(256, X) andBool #rangeSInt(256, Y) andBool notBool #rangeSInt(256, X *Int Y) [simplification]
 
     // ### dai-permit-pass-rough
 
-    rule (B ==K false) ==K false => B
+    rule (B ==K false) ==K false => B [simplification]
 
     // HACK
     rule #sizeByteArray(#ecrec(_ACCT)) => 32 // requires ACCT =/=K .Account
 
-    rule #range(BUF:Memory [ N <- _           ], KEY, WIDTH) => #range(BUF, KEY, WIDTH) requires KEY +Int WIDTH <=Int N
-    rule #range(BUF:Memory [ N := _:ByteArray ], KEY, WIDTH) => #range(BUF, KEY, WIDTH) requires KEY +Int WIDTH <=Int N
+    rule #range(BUF:Memory [ N <- _           ], KEY, WIDTH) => #range(BUF, KEY, WIDTH) requires KEY +Int WIDTH <=Int N [simplification]
+    rule #range(BUF:Memory [ N := _:ByteArray ], KEY, WIDTH) => #range(BUF, KEY, WIDTH) requires KEY +Int WIDTH <=Int N [simplification]
 
     // ### pot-rpow-loop-pass-rough
 
-    rule num0(N /Int 2) => num0(N) -Int 1 requires N >=Int 1 andBool N modInt 2 ==Int 0
-    rule num1(N /Int 2) => num1(N) -Int 1 requires N  >Int 1 andBool N modInt 2 ==Int 1
+    rule num0(N /Int 2) => num0(N) -Int 1 requires N >=Int 1 andBool N modInt 2 ==Int 0 [simplification]
+    rule num1(N /Int 2) => num1(N) -Int 1 requires N  >Int 1 andBool N modInt 2 ==Int 1 [simplification]
 
-    rule num0(N /Int 2) => num0(N) requires N >=Int 1 andBool N modInt 2 ==Int 1
-    rule num1(N /Int 2) => num1(N) requires N  >Int 1 andBool N modInt 2 ==Int 0
+    rule num0(N /Int 2) => num0(N) requires N >=Int 1 andBool N modInt 2 ==Int 1 [simplification]
+    rule num1(N /Int 2) => num1(N) requires N  >Int 1 andBool N modInt 2 ==Int 0 [simplification]
 
-    rule num0(N) >=Int 0 => num0(N) >=Int 1 requires N >=Int 1 andBool N modInt 2 ==Int 0
-    rule num1(N) >=Int 0 => num1(N) >=Int 1 requires N  >Int 1 andBool N modInt 2 ==Int 1
+    rule num0(N) >=Int 0 => num0(N) >=Int 1 requires N >=Int 1 andBool N modInt 2 ==Int 0 [simplification]
+    rule num1(N) >=Int 0 => num1(N) >=Int 1 requires N  >Int 1 andBool N modInt 2 ==Int 1 [simplification]
 
-    rule #rpow( ((Z *Int X) +Int Half) /Int Base , X                                , N /Int 2 , Base ) => #rpow( Z    , X , N , Base ) requires Half ==Int Base /Int 2 andBool N ==Int 1
-    rule #rpow( ((Z *Int X) +Int Half) /Int Base , ((X *Int X) +Int Half) /Int Base , N /Int 2 , Base ) => #rpow( Z    , X , N , Base ) requires N modInt 2 ==Int 1 andBool N >=Int 2 andBool Half ==Int Base /Int 2
-    rule #rpow( Z                                , ((X *Int X) +Int Half) /Int Base , N /Int 2 , Base ) => #rpow( Z    , X , N , Base ) requires N modInt 2 ==Int 0 andBool N >=Int 2 andBool Half ==Int Base /Int 2
-    rule #rpow( X                                , ((X *Int X) +Int Half) /Int Base , N /Int 2 , Base ) => #rpow( Base , X , N , Base ) requires N modInt 2 ==Int 1 andBool N /Int 2 =/=Int 0 andBool Half ==Int Base /Int 2
+    rule #rpow( ((Z *Int X) +Int Half) /Int Base , X                                , N /Int 2 , Base ) => #rpow( Z    , X , N , Base ) requires Half ==Int Base /Int 2 andBool N ==Int 1                                    [simplification]
+    rule #rpow( ((Z *Int X) +Int Half) /Int Base , ((X *Int X) +Int Half) /Int Base , N /Int 2 , Base ) => #rpow( Z    , X , N , Base ) requires N modInt 2 ==Int 1 andBool N >=Int 2 andBool Half ==Int Base /Int 2         [simplification]
+    rule #rpow( Z                                , ((X *Int X) +Int Half) /Int Base , N /Int 2 , Base ) => #rpow( Z    , X , N , Base ) requires N modInt 2 ==Int 0 andBool N >=Int 2 andBool Half ==Int Base /Int 2         [simplification]
+    rule #rpow( X                                , ((X *Int X) +Int Half) /Int Base , N /Int 2 , Base ) => #rpow( Base , X , N , Base ) requires N modInt 2 ==Int 1 andBool N /Int 2 =/=Int 0 andBool Half ==Int Base /Int 2 [simplification]
 
     // ### open-cdp
 
-    rule #computeValidJumpDests(#buf(32, BUF) => .ByteArray, I => I +Int 32, _RESULT) requires 0 <=Int  BUF andBool  BUF <Int pow256
+    rule #computeValidJumpDests(#buf(32, BUF) => .ByteArray, I => I +Int 32, _RESULT) requires 0 <=Int  BUF andBool  BUF <Int pow256 [simplification]
 
-    rule I in (SetItem(I') REST) => I in REST requires I =/=Int I'
+    rule I in (SetItem(I') REST) => I in REST requires I =/=Int I' [simplification]
 
-    rule #newAddr(_, _) ==K 0            => false
-    rule hash2(_, V1)   ==K hash2(_, V2) => false requires V1 =/=Int V2
-    rule 1              ==K hash2(_, _)  => false
+    rule #newAddr(_, _) ==K 0            => false                       [simplification]
+    rule hash2(_, V1)   ==K hash2(_, V2) => false requires V1 =/=Int V2 [simplification]
+    rule 1              ==K hash2(_, _)  => false                       [simplification]
 
 endmodule
