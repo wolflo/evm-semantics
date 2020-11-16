@@ -460,7 +460,7 @@ module VERIFICATION
     rule (B ==K false) ==K false => B [simplification]
 
     // HACK
-    rule #sizeByteArray(#ecrec(_ACCT)) => 32 // requires ACCT =/=K .Account
+    rule #sizeByteArray(#ecrec(_ACCT)) => 32 [simplification] // requires ACCT =/=K .Account
 
     rule #range(BUF:Memory [ N <- _           ], KEY, WIDTH) => #range(BUF, KEY, WIDTH) requires KEY +Int WIDTH <=Int N [simplification]
     rule #range(BUF:Memory [ N := _:ByteArray ], KEY, WIDTH) => #range(BUF, KEY, WIDTH) requires KEY +Int WIDTH <=Int N [simplification]
