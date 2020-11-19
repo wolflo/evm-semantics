@@ -73,6 +73,8 @@ In the comments next to each cell, we've marked which component of the YellowPap
               <callDepth> 0     </callDepth>
             </callState>
 
+            <logCallGas> .List </logCallGas>
+
             // A_* (execution substate)
             <substate>
               <selfDestruct> .Set  </selfDestruct>            // A_s
@@ -2043,6 +2045,7 @@ The intrinsic gas calculation mirrors the style of the YellowPaper (appendix H).
  // ----------------------------------------
     rule <k> GCALL:Int ~> #allocateCallGas => . ... </k>
          <callGas> _ => GCALL </callGas>
+         <logCallGas> (.List => ListItem(GCALL)) ... </logCallGas>
 
     syntax InternalOp ::= "#allocateCreateGas"
  // ------------------------------------------
